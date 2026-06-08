@@ -1,0 +1,6 @@
+{
+  "mcpServers": {
+    "microsoft-work-iq": { "command": "npx", "args": ["-y", "@microsoft/mcp-server-work-iq"] },
+    "microsoft-foundry-iq": { "command": "python", "args": ["-m", "azure.ai.foundry.mcp.server"] }
+  }
+}
