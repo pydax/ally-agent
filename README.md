@@ -50,3 +50,16 @@ source .venv/bin/activate
 
 # Install requirements
 pip install -r requirements.txt
+
+### 2. Execution
+```bash
+# Run the orchestration engine to initiate the multi-agent reasoning flow
+python3 src/orchestrator.py
+
+### 🔍 Interpreting the Reasoning Logs
+When you run the orchestrator, the system outputs real-time reasoning traces to your terminal. Here is how to navigate the logs:
+
+* **[PLANNER]:** Displays the agent decomposing the user's request into actionable steps.
+* **[CRITIC]:** Shows real-time quality checks. If a plan exceeds the 3-step cognitive limit, you will see the Critic reject the plan and trigger a re-generation event.
+* **[PRIVACY]:** Indicates that PII has been scrubbed/sanitized before data reaches the Insights Agent.
+* **[SUMMARY]:** The final, optimized 3-step learning plan ready for review.
