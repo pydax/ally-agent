@@ -1,61 +1,61 @@
-# tests/test_reasoning.py
+import os
+import sys
 import pytest
-from src.agent import AllyAgentCore, AccessiblePlan
+
+# Absolute path injection to ensure pytest natively discovers the 'src' directory
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if root_path not in sys.path:
+    sys.path.insert(0, root_path)
+
+from src.agents import EnterpriseLearningAgents, LowCognitiveLoadPlan
 
 @pytest.fixture
 def agent_instance():
-    """Initializes a fresh instance of the agent core for every test loop."""
-    return AllyAgentCore()
+    """Initializes a fresh instance of the Enterprise Learning Agents for every test loop."""
+    return EnterpriseLearningAgents()
 
-def test_multi_step_lifecycle_execution(agent_instance):
+def test_multi_agent_lifecycle_execution(agent_instance):
     """
-    Validates that the full Plan-Execute-Verify pipeline runs completely 
-    and successfully yields a strictly structured Pydantic object.
+    Validates that the multi-agent system runs cleanly and successfully
+    yields a strictly structured Pydantic object based on challenge documents.
     """
-    generator = agent_instance.run_lifecycle("Review my core assignments.")
+    # 1. Curator Step
+    curation = agent_instance.learning_path_curator("Cloud Engineer")
+    assert curation["target_certification"] == "AZ-204"
+    assert "Engineering Certification Enablement Guide" in curation["source_doc_title"]
     
-    final_output = None
-    for update in generator:
-        if isinstance(update, AccessiblePlan):
-            final_output = update
-
+    # 2. Plan Generation Step
+    plan = agent_instance.study_plan_generator("EMP-001", curation)
+    
     # Assertions to prove successful execution to the judges
-    assert final_output is not None, "The reasoning loop failed to yield a final structured plan."
-    assert len(final_output.prioritized_tasks) > 0, "The agent failed to extract tasks from the IQ context layers."
+    assert plan is not None, "The reasoning loop failed to yield a final structured plan."
+    assert isinstance(plan, LowCognitiveLoadPlan), "Output layout did not match the required Pydantic model structure."
+    assert plan.target_certification == "AZ-204"
 
 def test_accessibility_guardrails(agent_instance):
     """
-    CRUCIAL FOR ACCESSIBILITY PRIZE:
-    Ensures that no single task contains more than 3 steps. This strictly proves 
-    the agent enforces a low-cognitive-load threshold for neurodivergent users.
+    CRUCIAL FOR COGNITIVE ACCESSIBILITY:
+    Ensures that no generated study schedule contains more than 3 milestones.
+    This strictly proves the agent enforces low-cognitive-load thresholds.
     """
-    generator = agent_instance.run_lifecycle("Check project milestones.")
+    curation = agent_instance.learning_path_curator("DevOps Engineer")
+    plan = agent_instance.study_plan_generator("EMP-002", curation)
     
-    final_output = None
-    for update in generator:
-        if isinstance(update, AccessiblePlan):
-            final_output = update
+    # Strict structural validation cap: Must be 3 or fewer elements to avoid task paralysis
+    assert len(plan.milestones) <= 3, f"Cognitive overload failure: Generated plan has {len(plan.milestones)} milestones (Max: 3)."
 
-    for task in final_output.prioritized_tasks:
-        # Strict structural validation cap
-        assert len(task.steps) <= 3, f"Cognitive overload failure: Task '{task.task_name}' has more than 3 steps."
-
-def test_source_data_alignment(agent_instance):
+def test_source_data_alignment_and_privacy(agent_instance):
     """
-    CRUCIAL FOR ACCURACY PRIZE:
-    Validates that the core agent data matches original Work IQ inputs, 
-    preventing arbitrary deadline hallucination.
+    CRUCIAL FOR RELIABILITY & SAFETY:
+    Validates that management-level analytics aggregate systemic risk factors
+    without leaking specific employee PII identifiers into leadership views.
     """
-    generator = agent_instance.run_lifecycle("Sync communication channels.")
+    insights = agent_instance.manager_insights_agent()
     
-    final_output = None
-    for update in generator:
-        if isinstance(update, AccessiblePlan):
-            final_output = update
-
-    # Extract the agent's target deadline for the core task
-    titan_task = next((t for t in final_output.prioritized_tasks if "Titan" in t.task_name), None)
+    # Validate accurate analytical insights based on Work IQ data
+    assert "risk_summary" in insights
+    assert "completion risk metrics" in insights["risk_summary"]
     
-    assert titan_task is not None, "Failed to identify the anchored Project Titan target assignment."
-    # Ensure the translated task deadline perfectly preserves the source email data ('Friday')
-    assert "Friday" in titan_task.deadline, f"Data alignment breach: Expected deadline to reference Friday, got {titan_task.deadline}"
+    # Direct security check: Ensure raw individual tracking strings are entirely stripped
+    assert "EMP-001" not in str(insights), "Data leak detected: Aggregate insights exposed individual employee ID strings."
+    assert "L-1001" not in str(insights), "Data leak detected: Aggregate insights exposed individual learner ID strings."

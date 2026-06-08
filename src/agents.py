@@ -13,7 +13,7 @@ class LowCognitiveLoadPlan(BaseModel):
     learner_id: str
     target_certification: str
     source_citation: str
-    milestones: List[StudyMilestone] = Field(max_items=3)
+    milestones: List[StudyMilestone] = Field(max_length=3)
     reasoning_log: List[str] = Field(description="The multi-step verification thoughts of the agent")
 
 # --- The Advanced Agent Reasoning System ---
