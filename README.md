@@ -1,4 +1,8 @@
-# AllyAgent: Low-Cognitive-Load Enterprise Learning System
+### 🏗️ AllyAgent System Architecture
+The following diagram illustrates the multi-agent reasoning topology, highlighting the Planner-Executor patterns, feedback loops, and privacy-preserving data flows within the system:
+
+![System Architecture](architecture.png)
+
 ### Microsoft Foundry Track — Battle #2: Reasoning Agents
 
 AllyAgent is a multi-agent workforce optimization and certification orchestration system. It is designed to help organizations manage internal team certification programs by automatically balancing study requirements against live organizational work signals, keeping learning paths manageable, clear, and highly structured.
