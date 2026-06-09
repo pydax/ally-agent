@@ -1,5 +1,7 @@
 import os
 import sys
+# Dynamic Path Injection: Ensures 'src' is discoverable regardless of how the script is invoked
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import json
 from dotenv import load_dotenv
 from azure.ai.projects import AIProjectClient
@@ -32,9 +34,10 @@ class AllyAgentAzureOrchestrator:
         
         # 🤖 AGENT 1: Learning Path Curator
         curation = self.local_agents.learning_path_curator(role)
-        target_cert = getattr(curation, "target_certification", None) or getattr(curation, "certification", None) or "AZ-204"
+        # FIX: Use .get() for dictionaries instead of getattr()
+        target_cert = curation.get("target_certification") or "AZ-204"
         
-        print("🤖 1. Learning Path Curator -> Target: AZ-204")
+        print(f"🤖 1. Learning Path Curator -> Target: {target_cert}")
         print(f"├── Decomposing incoming request for role: '{role}'")
         print("├── Cross-referencing text context within 'Engineering Certification Enablement Guide (Synthetic)'")
         print(f"└── Verified primary certification requirement detected: Mapped to {target_cert} framework.")
@@ -43,11 +46,15 @@ class AllyAgentAzureOrchestrator:
         # 🤖 AGENT 2: Study Plan Generator
         plan = self.local_agents.study_plan_generator(employee_id, curation)
         
-        # Dynamically extract whatever hour attribute you named in LowCognitiveLoadPlan
-        total_hours = (getattr(plan, "total_recommended_hours", None) or 
-                       getattr(plan, "recommended_hours", None) or 
-                       getattr(plan, "total_hours", None) or 20.0)
-        milestones_list = getattr(plan, "milestones", [])
+        # FIX: Pydantic models require model_dump() or attribute access depending on your exact return type
+        # Since agents.py wraps this in LowCognitiveLoadPlan, let's extract carefully
+        if hasattr(plan, "model_dump"):
+            plan_dict = plan.model_dump()
+        else:
+            plan_dict = plan
+            
+        total_hours = plan_dict.get("total_recommended_hours") or 20.0
+        milestones_list = plan_dict.get("milestones") or []
         
         print("🤖 2. Study Plan Generator (Planner-Executor Pattern)")
         print("├── Initializing Planner-Executor loop for study sequence structure.")
@@ -55,7 +62,6 @@ class AllyAgentAzureOrchestrator:
         print("├── Executed Capacity Tool calculation. Restricting allocation to 5.0h/week to eliminate cognitive strain.")
         print(f"├── Executed Fabric IQ Semantic Tool loop: Target curriculum demands {total_hours} total baseline hours.")
         
-        # ACTIVE CLOUD HOOK INJECTION FOR THE JUDGES
         if self.openai_client:
             try:
                 cloud_prompt = f"Verify cognitive pacing constraints for {role} upskilling to {target_cert}."
@@ -84,8 +90,9 @@ class AllyAgentAzureOrchestrator:
         
         # 🤖 AGENT 4: Assessment & Evaluation Agent
         assessment = self.local_agents.assessment_agent(employee_id)
-        status_val = getattr(assessment, "status", None) or getattr(assessment, "decision", None) or "RECOMMEND_LOOP_BACK"
-        score_val = getattr(assessment, "historical_baseline_score_avg", None) or getattr(assessment, "practice_score_avg", None) or 67.0
+        # FIX: Use .get() for dictionaries
+        status_val = assessment.get("status") or "RECOMMEND_LOOP_BACK"
+        score_val = assessment.get("historical_baseline_score_avg") or 67.0
         
         print(f"🤖 4. Assessment & Evaluation Agent -> Decision: {status_val}")
         print(f"├── Fetching historical simulation scores for Learner reference tied to {employee_id}")
@@ -95,6 +102,7 @@ class AllyAgentAzureOrchestrator:
         
         # 🤖 AGENT 5: Privacy-Preserving Manager Insights Agent
         insights = self.local_agents.manager_insights_agent()
+        # FIX: Use .get() for dictionaries
         risk_val = insights.get("risk_summary") or "1 team tracking profiles currently present completion risk metrics due to meeting overhead."
         
         print("🤖 5. Privacy-Preserving Manager Insights Agent")

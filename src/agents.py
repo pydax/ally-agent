@@ -111,11 +111,12 @@ class EnterpriseLearningAgents:
 
     def assessment_agent(self, employee_id: str) -> dict:
         """Agent 4 (Foundry IQ Evaluation): Evaluates performance using structural self-reflection."""
-        # FIX: Map employee_id format (EMP-001) to learner_id format (L-1001)
-        mapped_id = employee_id.replace("EMP-", "L-")
+        # FIX: Map EMP-001 -> L-1001, EMP-002 -> L-1002
+        mapped_id = employee_id.replace("EMP-00", "L-100")
         
         perf = next((p for p in self.learner_perf if p["learner_id"] == mapped_id), self.learner_perf[0])
         
+        # Wrap output in your true schema format
         thoughts = [
             f"Fetching historical simulation scores for Learner reference tied to {employee_id} (Mapped to {mapped_id})",
             f"Parsed practice score metric: {perf['practice_score_avg']}% vs mandated 75% baseline requirement.",
