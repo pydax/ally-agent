@@ -2,6 +2,12 @@ import json
 from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any
+from src.schemas import (
+    CurationOutput, 
+    EngagementOutput, 
+    AssessmentOutput, 
+    ManagerInsightsOutput
+)
 
 # --- Advanced Pydantic Models for Schema Enforcement ---
 class StudyMilestone(BaseModel):
@@ -105,16 +111,19 @@ class EnterpriseLearningAgents:
 
     def assessment_agent(self, employee_id: str) -> dict:
         """Agent 4 (Foundry IQ Evaluation): Evaluates performance using structural self-reflection."""
-        # Dynamically match the student or fall back to the first record safely
-        perf = next((p for p in self.learner_perf if p["learner_id"] == employee_id), self.learner_perf[0])
+        # FIX: Map employee_id format (EMP-001) to learner_id format (L-1001)
+        mapped_id = employee_id.replace("EMP-", "L-")
+        
+        perf = next((p for p in self.learner_perf if p["learner_id"] == mapped_id), self.learner_perf[0])
         
         thoughts = [
-            f"Fetching historical simulation scores for Learner reference tied to {employee_id}",
+            f"Fetching historical simulation scores for Learner reference tied to {employee_id} (Mapped to {mapped_id})",
             f"Parsed practice score metric: {perf['practice_score_avg']}% vs mandated 75% baseline requirement.",
             "Evaluation Condition: Fail criteria hit. Initiating workflow loop-back parameters."
         ]
         return {
             "status": "RECOMMEND_LOOP_BACK" if perf["practice_score_avg"] < 75 else "PROCEED_TO_EXAM",
+            "historical_baseline_score_avg": perf["practice_score_avg"],
             "agent_thoughts": thoughts
         }
 

@@ -59,3 +59,18 @@ def test_source_data_alignment_and_privacy(agent_instance):
     # Direct security check: Ensure raw individual tracking strings are entirely stripped
     assert "EMP-001" not in str(insights), "Data leak detected: Aggregate insights exposed individual employee ID strings."
     assert "L-1001" not in str(insights), "Data leak detected: Aggregate insights exposed individual learner ID strings."
+
+from src.orchestrator import AllyAgentAzureOrchestrator
+
+def test_orchestrator_lifecycle_execution():
+    """Integration Test: Validates the entire multi-agent loop executes without crashing."""
+    orchestrator = AllyAgentAzureOrchestrator()
+    # Force cloud assets offline for testing parameters
+    orchestrator.openai_client = None 
+    
+    # Assert execution finishes completely without raising any exceptions
+    try:
+        orchestrator.execute_challenge_lifecycle("Cloud Engineer", "EMP-001")
+        assert True
+    except Exception as e:
+        pytest.fail(f"Orchestrator lifecycle integration failed with exception: {e}")
