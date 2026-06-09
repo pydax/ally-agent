@@ -52,8 +52,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 ### 2. Execution
+# Run the orchestration engine to initiate the multi-agent reasoning flow:
 ```bash
-# Run the orchestration engine to initiate the multi-agent reasoning flow
 python3 src/orchestrator.py
 
 ### 🔍 Interpreting the Reasoning Logs
