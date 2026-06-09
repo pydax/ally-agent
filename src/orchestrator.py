@@ -95,7 +95,7 @@ class AllyAgentAzureOrchestrator:
         
         # 🤖 AGENT 5: Privacy-Preserving Manager Insights Agent
         insights = self.local_agents.manager_insights_agent()
-        risk_val = getattr(insights, "aggregate_risk_metric", None) or getattr(insights, "risk_indicator", None) or "1 team tracking profiles currently present completion risk metrics due to meeting overhead."
+        risk_val = insights.get("risk_summary") or "1 team tracking profiles currently present completion risk metrics due to meeting overhead."
         
         print("🤖 5. Privacy-Preserving Manager Insights Agent")
         print("├── Parsing cross-tenant workload models for aggregate leadership report.")
