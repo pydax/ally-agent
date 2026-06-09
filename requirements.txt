@@ -1,3 +1,6 @@
-pydantic>=2.0
-rich>=13.0
-pytest>=7.0
+pydantic
+rich
+pytest
+python-dotenv
+azure-ai-projects
+azure-identity

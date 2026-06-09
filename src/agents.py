@@ -19,7 +19,10 @@ class LowCognitiveLoadPlan(BaseModel):
 # --- The Advanced Agent Reasoning System ---
 class EnterpriseLearningAgents:
     def __init__(self):
-        data_dir = Path("data")
+        # FIX: Anchor the path dynamically to this file's location
+        base_dir = Path(__file__).resolve().parent.parent
+        data_dir = base_dir / "data"
+        
         with open(data_dir / "learner_performance.json", "r") as f:
             self.learner_perf = json.load(f)
         with open(data_dir / "work_activity_signals.json", "r") as f:
@@ -102,7 +105,9 @@ class EnterpriseLearningAgents:
 
     def assessment_agent(self, employee_id: str) -> dict:
         """Agent 4 (Foundry IQ Evaluation): Evaluates performance using structural self-reflection."""
-        perf = next((p for p in self.learner_perf if p["learner_id"] == "L-1001"), self.learner_perf[0])
+        # FIX: Dynamically match the student or fall back to the first record safely
+        perf = next((p for p in self.learner_perf if p["learner_id"] == employee_id), self.learner_perf[0])
+        
         thoughts = [
             f"Fetching historical simulation scores for Learner reference tied to {employee_id}",
             f"Parsed practice score metric: {perf['practice_score_avg']}% vs mandated 75% baseline requirement.",
