@@ -105,7 +105,7 @@ class EnterpriseLearningAgents:
 
     def assessment_agent(self, employee_id: str) -> dict:
         """Agent 4 (Foundry IQ Evaluation): Evaluates performance using structural self-reflection."""
-        # FIX: Dynamically match the student or fall back to the first record safely
+        # Dynamically match the student or fall back to the first record safely
         perf = next((p for p in self.learner_perf if p["learner_id"] == employee_id), self.learner_perf[0])
         
         thoughts = [
