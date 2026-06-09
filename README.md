@@ -43,6 +43,7 @@ The system reads directly from the challenge-mandated schemas populated in the `
 ## 🚀 Local Installation & Execution
 
 ### 1. Initialize Virtual Environment & Dependencies
+
 ```bash
 # Create and activate environment
 python3 -m venv .venv
@@ -50,16 +51,21 @@ source .venv/bin/activate
 
 # Install requirements
 pip install -r requirements.txt
+```
 
 ### 2. Execution
-# Run the orchestration engine to initiate the multi-agent reasoning flow:
+
+Run the orchestration engine to initiate the multi-agent reasoning flow:
+
 ```bash
 python3 src/orchestrator.py
+```
 
 ### 🔍 Interpreting the Reasoning Logs
-When you run the orchestrator, the system outputs real-time reasoning traces to your terminal. Here is how to navigate the logs:
+
+When you run the orchestrator, the system outputs real-time reasoning traces to your terminal. Here's how to navigate the logs:
 
 * **[PLANNER]:** Displays the agent decomposing the user's request into actionable steps.
-* **[CRITIC]:** Shows real-time quality checks. If a plan exceeds the 3-step cognitive limit, you will see the Critic reject the plan and trigger a re-generation event.
-* **[PRIVACY]:** Indicates that PII has been scrubbed/sanitized before data reaches the Insights Agent.
-* **[SUMMARY]:** The final, optimized 3-step learning plan ready for review.
+* **[CRITIC]:** Shows real-time quality checks. If a plan exceeds the 3-step cognitive limit, the Critic rejects the plan and triggers a regeneration event.
+* **[PRIVACY]:** Indicates that personally identifiable information (PII) has been scrubbed and sanitized before data reaches the Insights Agent.
+* **[SUMMARY]:** Displays the final optimized 3-step learning plan ready for review.
