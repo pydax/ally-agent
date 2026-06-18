@@ -1,3 +1,4 @@
+### AllyAgent - Accessibility-Focused Enterprise Copilot
 ### 🏗️ AllyAgent System Architecture
 The following diagram illustrates the multi-agent reasoning topology, highlighting the Planner-Executor patterns, feedback loops, and privacy-preserving data flows within the system:
 
